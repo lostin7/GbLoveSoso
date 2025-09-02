@@ -17,12 +17,12 @@
 
     .floating-text {
       position: absolute;
-      color: #ff3366;
+      color: #3399ff; /* azul substituindo #ff3366 */
       font-size: 22px;
       font-weight: bold;
       pointer-events: none;
-      animation: floatUp 1.5s ease-out forwards;
-      text-shadow: 0 0 5px white;
+      animation: floatUp 1.8s ease-out forwards;
+      text-shadow: 0 0 6px white;
     }
 
     @keyframes floatUp {
@@ -32,7 +32,7 @@
       }
       100% {
         opacity: 0;
-        transform: translateY(-80px) scale(1.5);
+        transform: translateY(-100px) scale(1.5);
       }
     }
   </style>
@@ -55,14 +55,13 @@
     let drops = Array(columns).fill(1);
 
     function draw() {
-      // Fondo semitransparente para efecto de estela
       ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       ctx.fillRect(0, 0, width, height);
 
       const gradient = ctx.createLinearGradient(0, 0, width, height);
-      gradient.addColorStop(0, "#ff4d6d");
-      gradient.addColorStop(0.5, "#ff99aa");
-      gradient.addColorStop(1, "#ff1a66");
+      gradient.addColorStop(0, "#4da6ff");   // substituindo rosa por azul
+      gradient.addColorStop(0.5, "#99ccff"); // substituindo rosa claro por azul claro
+      gradient.addColorStop(1, "#1a8cff");   // substituindo rosa escuro por azul escuro
 
       ctx.fillStyle = gradient;
       ctx.font = fontSize + "px 'Segoe UI', Arial";
@@ -74,7 +73,8 @@
           drops[i] = 0;
         }
 
-        drops[i]++;
+        // velocidad reducida
+        drops[i] += 0.5;
       }
 
       requestAnimationFrame(draw);
@@ -82,7 +82,7 @@
 
     draw();
 
-    // Redimensionar y regenerar columnas
+    // Ajuste de tamaño
     window.addEventListener('resize', () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -92,19 +92,22 @@
       drops = Array(columns).fill(1);
     });
 
-    // Al hacer clic: mostrar "TE AMO" flotante
+    // Click: muchos "TE AMO" flotantes
     document.addEventListener('click', (e) => {
-      const text = document.createElement('div');
-      text.className = 'floating-text';
-      text.innerText = 'TE AMO';
-      text.style.left = e.clientX + 'px';
-      text.style.top = e.clientY + 'px';
-      document.body.appendChild(text);
+      for (let i = 0; i < 6; i++) {
+        const text = document.createElement('div');
+        text.className = 'floating-text';
+        text.innerText = 'TE AMO SOFIA';
+        text.style.left = (e.clientX + (Math.random() * 60 - 30)) + 'px';
+        text.style.top = (e.clientY + (Math.random() * 60 - 30)) + 'px';
+        document.body.appendChild(text);
 
-      setTimeout(() => {
-        text.remove();
-      }, 1500);
+        setTimeout(() => {
+          text.remove();
+        }, 1800);
+      }
     });
   </script>
 </body>
 </html>
+F
