@@ -21,8 +21,8 @@
       font-size: 22px;
       font-weight: bold;
       pointer-events: none;
-      animation: floatUp 1.8s ease-out forwards;
-      text-shadow: 0 0 6px white;
+      animation: floatUp 1.5s ease-out forwards;
+      text-shadow: 0 0 5px white;
     }
 
     @keyframes floatUp {
@@ -32,7 +32,7 @@
       }
       100% {
         opacity: 0;
-        transform: translateY(-100px) scale(1.5);
+        transform: translateY(-80px) scale(1.5);
       }
     }
   </style>
@@ -55,6 +55,7 @@
     let drops = Array(columns).fill(1);
 
     function draw() {
+      // Fondo semitransparente para efecto de estela
       ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       ctx.fillRect(0, 0, width, height);
 
@@ -73,8 +74,7 @@
           drops[i] = 0;
         }
 
-        // velocidad reducida
-        drops[i] += 0.5;
+        drops[i]++;
       }
 
       requestAnimationFrame(draw);
@@ -82,7 +82,7 @@
 
     draw();
 
-    // Ajuste de tamaño
+    // Redimensionar y regenerar columnas
     window.addEventListener('resize', () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -92,20 +92,18 @@
       drops = Array(columns).fill(1);
     });
 
-    // Click: muchos "TE AMO" flotantes
+    // Al hacer clic: mostrar "TE AMO" flotante
     document.addEventListener('click', (e) => {
-      for (let i = 0; i < 6; i++) {
-        const text = document.createElement('div');
-        text.className = 'floating-text';
-        text.innerText = 'TE AMO';
-        text.style.left = (e.clientX + (Math.random() * 60 - 30)) + 'px';
-        text.style.top = (e.clientY + (Math.random() * 60 - 30)) + 'px';
-        document.body.appendChild(text);
+      const text = document.createElement('div');
+      text.className = 'floating-text';
+      text.innerText = 'TE AMO';
+      text.style.left = e.clientX + 'px';
+      text.style.top = e.clientY + 'px';
+      document.body.appendChild(text);
 
-        setTimeout(() => {
-          text.remove();
-        }, 1800);
-      }
+      setTimeout(() => {
+        text.remove();
+      }, 1500);
     });
   </script>
 </body>
