@@ -2,96 +2,111 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Para ti 💌</title>
+  <title>Lluvia de TE AMO</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to top right, #ff9a9e, #fad0c4);
-      height: 100vh;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background-color: black;
       font-family: 'Segoe UI', sans-serif;
-      color: #fff;
-      text-align: center;
     }
 
-    h1 {
-      font-size: 3em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    canvas {
+      display: block;
     }
 
-    p {
-      font-size: 1.2em;
-      max-width: 600px;
-      margin-top: 1em;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-    }
-
-    .heart {
+    .floating-text {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 10s infinite;
+      color: #ff3366;
+      font-size: 22px;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 1.8s ease-out forwards;
+      text-shadow: 0 0 6px white;
     }
 
-    .heart::before,
-    .heart::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-    }
-
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
-
-    @keyframes float {
+    @keyframes floatUp {
       0% {
-        transform: translateY(100vh) rotate(45deg);
         opacity: 1;
+        transform: translateY(0);
       }
       100% {
-        transform: translateY(-10vh) rotate(45deg);
         opacity: 0;
+        transform: translateY(-100px) scale(1.5);
       }
     }
   </style>
 </head>
 <body>
-  <div>
-    <h1>Te amo 💕</h1>
-    <p>
-      Gracias por estar en mi vida. Cada día contigo es un regalo que valoro más de lo que las palabras pueden expresar.
-      Esta no es solo una página, es una parte de mi corazón dedicada a ti. ❤️
-    </p>
-  </div>
+  <canvas id="canvas"></canvas>
 
   <script>
-    // Crear corazones flotantes
-    const totalHearts = 30;
-    for (let i = 0; i < totalHearts; i++) {
-      let heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (5 + Math.random() * 5) + "s";
-      heart.style.opacity = Math.random();
-      heart.style.transform = `scale(${0.5 + Math.random() * 1}) rotate(45deg)`;
-      document.body.appendChild(heart);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const phrase = "TE AMO ";
+    const fontSize = 18;
+    let columns = Math.floor(width / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, width, height);
+
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, "#ff4d6d");
+      gradient.addColorStop(0.5, "#ff99aa");
+      gradient.addColorStop(1, "#ff1a66");
+
+      ctx.fillStyle = gradient;
+      ctx.font = fontSize + "px 'Segoe UI', Arial";
+
+      for (let i = 0; i < drops.length; i++) {
+        ctx.fillText(phrase, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        // velocidad reducida
+        drops[i] += 0.5;
+      }
+
+      requestAnimationFrame(draw);
     }
+
+    draw();
+
+    // Ajuste de tamaño
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      columns = Math.floor(width / fontSize);
+      drops = Array(columns).fill(1);
+    });
+
+    // Click: muchos "TE AMO" flotantes
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 6; i++) {
+        const text = document.createElement('div');
+        text.className = 'floating-text';
+        text.innerText = 'TE AMO';
+        text.style.left = (e.clientX + (Math.random() * 60 - 30)) + 'px';
+        text.style.top = (e.clientY + (Math.random() * 60 - 30)) + 'px';
+        document.body.appendChild(text);
+
+        setTimeout(() => {
+          text.remove();
+        }, 1800);
+      }
+    });
   </script>
 </body>
 </html>
